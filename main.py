@@ -10,4 +10,8 @@ with sr.Microphone() as source:
     audio = r.listen(source)
 
 try:
-    command = r.re
+    print("Sphinx thinks you said " + r.recognize_sphinx(audio))
+except sr.UnknownValueError:
+    print("Sphinx could not understand audio")
+except sr.RequestError as e:
+    print("Sphinx error; {0}".format(e))
