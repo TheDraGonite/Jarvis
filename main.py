@@ -1,19 +1,22 @@
 """Джарвис 0.2"""
 import pyttsx3
-import speech_recognition as sr
+import os
+from pocketsphinx import LiveSpeech, get_model_path
 
 engine = pyttsx3.init()  # На всякий случай сделал engine
-r = sr.Recognizer()  # Звукоразпознавалка
+model_path = get_model_path()
 
-with sr.Microphone() as source:
-    print("Базарь!")
-    r.pause_threshold = 1
-    r.adjust_for_ambient_noise(source, duration=1)
-    audio = r.listen(source)
+speech = LiveSpeech(
+    verbose=False,
+    sampling_rate=16000,
+    buffer_size=2048,
+    no_search=False,
+    full_utt=False,
+    hmm=os.path.join(model_path, 'zero_ru.cd_cont_4000'),
+    lm=os.path.join(model_path, 'ru.lm'),
+    dic=os.path.join(model_path, 'ru.dic')
+)
+print("Базарь!")
 
-try:
-    print("Sphinx thinks you said " + r.recognize_sphinx(audio))
-except sr.UnknownValueError:
-    print("Sphinx could not understand audio")
-except sr.RequestError as e:
-    print("Sphinx error; {0}".format(e))
+for phrase in speech:
+    print(phrase)
