@@ -6,13 +6,16 @@ engine = pyttsx3.init()  # На всякий случай сделал engine
 r = sr.Recognizer()  # Звукоразпознавалка
 
 with sr.Microphone() as source:
-    print("Базарь!")
+    print("Слушаю..")
     r.pause_threshold = 1
     r.adjust_for_ambient_noise(source, duration=1)
-    audio = r.listen(source)
+    audio = r.listen(source, phrase_time_limit=5)
 
 try:
-    print("Sphinx thinks you said " + r.recognize_sphinx(audio))
+    recognized = r.recognize_google(audio, language='ru-RU')
+    print("Sphinx thinks you said", recognized)
+    recognized_string = " ".join(recognized)
+    engine.say(recognized_string)
 except sr.UnknownValueError:
     print("Sphinx could not understand audio")
 except sr.RequestError as e:
