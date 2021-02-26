@@ -14,8 +14,11 @@ with sr.Microphone() as source:
 try:
     recognized = r.recognize_google(audio, language='ru-RU')
     print("Sphinx thinks you said", recognized)
-    recognized_string = " ".join(recognized)
-    engine.say(recognized_string)
+    if type(recognized) == list:
+        recognized_string = " ".join(recognized)
+        engine.say(recognized_string)
+    else:
+        engine.say(recognized)
 except sr.UnknownValueError:
     print("Sphinx could not understand audio")
 except sr.RequestError as e:
